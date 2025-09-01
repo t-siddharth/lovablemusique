@@ -1,3 +1,4 @@
+// Re-export all music-related types and utilities
 export type { ChromaticNote, ScaleType } from '@/types/music';
 export { CHROMATIC_COLORS } from '@/constants/colors';
 export { CHROMATIC_NOTES, getNoteColor, getNoteColorParts, transposeScale, SCALES } from '@/utilities/music';
