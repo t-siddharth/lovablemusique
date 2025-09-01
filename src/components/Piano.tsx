@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PianoKey } from "./PianoKey";
 import { PianoControls } from "./PianoControls";
 import { toast } from "sonner";
+import { useTone } from "@/hooks/useTone";
 
 // Piano note frequencies (C4 to B5 - 2 octaves)
 const noteFrequencies = {
@@ -19,77 +20,37 @@ export const Piano = () => {
   const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
   const [volume, setVolume] = useState(0.3);
   const [octaveShift, setOctaveShift] = useState(0);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const oscillatorsRef = useRef<Map<string, OscillatorNode>>(new Map());
+  const { playNote: playToneNote, stopNote: stopToneNote, setVolume: setToneVolume, isInitialized } = useTone();
 
-  // Initialize audio context
+  // Initialize audio and show ready message
   useEffect(() => {
-    const initAudio = async () => {
-      try {
-        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
-        toast("Piano ready! Use your keyboard or click the keys to play.");
-      } catch (error) {
-        toast("Audio not supported in this browser");
-      }
-    };
-    initAudio();
+    if (isInitialized) {
+      toast("Piano ready! Use your keyboard or click the keys to play.");
+    }
+  }, [isInitialized]);
 
-    return () => {
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
-    };
-  }, []);
+  // Update Tone.js volume when volume state changes
+  useEffect(() => {
+    setToneVolume(volume);
+  }, [volume, setToneVolume]);
 
   const playNote = useCallback((note: string) => {
-    if (!audioContextRef.current || pressedKeys.has(note)) return;
+    if (!isInitialized || pressedKeys.has(note)) return;
 
-    const frequency = noteFrequencies[note as keyof typeof noteFrequencies];
-    if (!frequency) return;
-
-    // Apply octave shift
-    const adjustedFrequency = frequency * Math.pow(2, octaveShift);
-
-    const oscillator = audioContextRef.current.createOscillator();
-    const gainNode = audioContextRef.current.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContextRef.current.destination);
-
-    oscillator.type = 'triangle';
-    oscillator.frequency.setValueAtTime(adjustedFrequency, audioContextRef.current.currentTime);
-    
-    gainNode.gain.setValueAtTime(0, audioContextRef.current.currentTime);
-    gainNode.gain.linearRampToValueAtTime(volume * 0.3, audioContextRef.current.currentTime + 0.01);
-
-    oscillator.start();
-    oscillatorsRef.current.set(note, oscillator);
-
+    playToneNote(note, octaveShift);
     setPressedKeys(prev => new Set([...prev, note]));
-  }, [volume, octaveShift, pressedKeys]);
+  }, [isInitialized, octaveShift, pressedKeys, playToneNote]);
 
   const stopNote = useCallback((note: string) => {
-    const oscillator = oscillatorsRef.current.get(note);
-    if (!oscillator || !audioContextRef.current) return;
+    if (!isInitialized) return;
 
-    const gainNode = oscillator.context.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContextRef.current.destination);
-    
-    gainNode.gain.setValueAtTime(volume * 0.3, audioContextRef.current.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0, audioContextRef.current.currentTime + 0.1);
-
-    setTimeout(() => {
-      oscillator.stop();
-      oscillatorsRef.current.delete(note);
-    }, 100);
-
+    stopToneNote(note, octaveShift);
     setPressedKeys(prev => {
       const newSet = new Set(prev);
       newSet.delete(note);
       return newSet;
     });
-  }, [volume]);
+  }, [isInitialized, octaveShift, stopToneNote]);
 
   // Keyboard event handlers
   useEffect(() => {
