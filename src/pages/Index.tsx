@@ -1,7 +1,7 @@
-import { Piano } from "@/components/Piano";
+import ScalePad from "@/components/ScalePad";
 
 const Index = () => {
-  return <Piano />;
+  return <ScalePad />;
 };
 
 export default Index;

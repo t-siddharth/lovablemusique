@@ -38,24 +38,6 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    /* Piano-specific design tokens */
-    --piano-white-key: 0 0% 98%;
-    --piano-white-key-pressed: 0 0% 90%;
-    --piano-black-key: 220 15% 8%;
-    --piano-black-key-pressed: 220 15% 15%;
-    --piano-shadow: 220 50% 5%;
-    --piano-background: 220 15% 12%;
-    --piano-panel: 220 15% 10%;
-    
-    /* Gradients */
-    --gradient-white-key: linear-gradient(180deg, hsl(0 0% 98%) 0%, hsl(0 0% 92%) 100%);
-    --gradient-black-key: linear-gradient(180deg, hsl(220 15% 15%) 0%, hsl(220 15% 8%) 100%);
-    --gradient-panel: linear-gradient(135deg, hsl(220 15% 12%) 0%, hsl(220 15% 8%) 100%);
-    
-    /* Shadows */
-    --shadow-key: 0 2px 8px hsl(var(--piano-shadow) / 0.3);
-    --shadow-key-pressed: 0 1px 4px hsl(var(--piano-shadow) / 0.5);
-    --shadow-panel: 0 8px 32px hsl(var(--piano-shadow) / 0.4);
 
     --sidebar-background: 220 15% 10%;
     --sidebar-foreground: 210 40% 98%;
