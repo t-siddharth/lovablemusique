@@ -12,7 +12,11 @@ export default {
 		// Text colors for chromatic notes
 		'text-red-500', 'text-orange-500', 'text-yellow-500', 'text-lime-500',
 		'text-green-500', 'text-teal-500', 'text-cyan-500', 'text-blue-500',
-		'text-indigo-500', 'text-violet-500', 'text-fuchsia-500', 'text-pink-500'
+		'text-indigo-500', 'text-violet-500', 'text-fuchsia-500', 'text-pink-500',
+		// Background classes for dots
+		'bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-lime-500',
+		'bg-green-500', 'bg-teal-500', 'bg-cyan-500', 'bg-blue-500',
+		'bg-indigo-500', 'bg-violet-500', 'bg-fuchsia-500', 'bg-pink-500'
 	],
 	prefix: "",
 	theme: {
@@ -24,6 +28,9 @@ export default {
 			}
 		},
 		extend: {
+			gridTemplateColumns: {
+				'14': 'repeat(14, minmax(0, 1fr))',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

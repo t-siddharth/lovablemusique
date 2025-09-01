@@ -11,6 +11,8 @@ interface NoteButtonProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showLabel?: boolean;
   disabled?: boolean;
+  isActive?: boolean;
+  variant?: 'natural' | 'sharp';
 }
 
 const sizeClasses = {
@@ -35,7 +37,9 @@ export const NoteButton = ({
   className,
   size = 'lg',
   showLabel = true,
-  disabled = false 
+  disabled = false,
+  isActive = true,
+  variant = 'natural'
 }: NoteButtonProps) => {
   const frequency = getFrequency(note, octave);
   
@@ -51,14 +55,20 @@ export const NoteButton = ({
     }
   };
 
+  // Don't render if inactive (dots are handled by PianoGrid)
+  if (!isActive) {
+    return null;
+  }
+
   return (
     <Button
       className={cn(
         sizeClasses[size],
-        "font-bold transition-all duration-150 rounded-2xl shadow-lg",
+        "font-bold transition-all duration-300 shadow-lg",
         "active:scale-95 active:shadow-inner",
         "focus:ring-4 focus:ring-offset-2",
         "disabled:opacity-50 disabled:cursor-not-allowed",
+        variant === 'natural' ? "rounded-lg" : "rounded-t-lg rounded-b-sm",
         getNoteColor(note),
         className
       )}

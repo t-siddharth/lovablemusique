@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { NoteButton } from './ui/note-button';
+import { PianoGrid } from './piano-grid';
 import { ScaleSwitcher } from './scale-switcher';
 import { ChromatiKeydTitle } from './chromati-keyd-title';
 import { SCALES, transposeScale, type ChromaticNote, type ScaleType } from '@/lib/music';
 import { useTone } from '@/hooks/useTone';
-import { cn } from '@/lib/utils';
 export const MusicApp = () => {
   const [currentScale, setCurrentScale] = useState<ScaleType>('pentatonic');
   const [currentKey, setCurrentKey] = useState<ChromaticNote>('C');
@@ -33,9 +32,13 @@ export const MusicApp = () => {
         <ScaleSwitcher currentScale={currentScale} onScaleChange={setCurrentScale} />
       </div>
 
-      {/* Note Grid */}
-      <div className={cn("grid gap-4 max-w-4xl w-full justify-center", currentNotes.length <= 3 && "grid-cols-3", currentNotes.length === 5 && "grid-cols-3 md:grid-cols-5", currentNotes.length === 7 && "grid-cols-3 md:grid-cols-4 lg:grid-cols-7", currentNotes.length === 12 && "grid-cols-3 md:grid-cols-4 lg:grid-cols-6")}>
-        {currentNotes.map((note, index) => <NoteButton key={`${note}-${index}`} note={note} octave={octave} onPlay={handlePlayNote} onRelease={() => handleReleaseNote(`${note}${octave}`)} size="xl" disabled={!isInitialized} />)}
-      </div>
+      {/* Piano Grid */}
+      <PianoGrid
+        activeNotes={currentNotes}
+        octave={octave}
+        onPlay={handlePlayNote}
+        onRelease={handleReleaseNote}
+        isInitialized={isInitialized}
+      />
     </div>;
 };
