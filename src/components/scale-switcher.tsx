@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import type { ScaleType } from "@/lib/music"
+import { Triangle, Star, Rainbow, Clock } from "lucide-react"
 
 interface ScaleSwitcherProps {
   currentScale: ScaleType;
@@ -10,24 +11,27 @@ interface ScaleSwitcherProps {
 }
 
 const scaleOptions = [
-  { type: 'triad' as const, notes: 3, label: 'Simple', description: 'Perfect for toddlers' },
-  { type: 'pentatonic' as const, notes: 5, label: 'Pentatonic', description: 'Never sounds wrong' },
-  { type: 'major' as const, notes: 7, label: 'Major Scale', description: 'Traditional scale' },
-  { type: 'chromatic' as const, notes: 12, label: 'All Notes', description: 'Full piano' }
+  { type: 'triad' as const, notes: 3, Icon: Triangle, aria: 'Triad (3 notes)' },
+  { type: 'pentatonic' as const, notes: 5, Icon: Star, aria: 'Pentatonic (5 notes)' },
+  { type: 'major' as const, notes: 7, Icon: Rainbow, aria: 'Major Scale (7 notes)' },
+  { type: 'chromatic' as const, notes: 12, Icon: Clock, aria: 'All Notes (12 notes)' }
 ];
 
 export const ScaleSwitcher = ({ currentScale, onScaleChange, className }: ScaleSwitcherProps) => {
   return (
-    <div className={cn("flex flex-wrap gap-2", className)}>
-      {scaleOptions.map(({ type, notes, label, description }) => (
+    <div className={cn("inline-flex items-center gap-2", className)}>
+      {scaleOptions.map(({ type, notes, Icon, aria }) => (
         <Button
           key={type}
           variant={currentScale === type ? "default" : "outline"}
+          size="icon"
           className={cn(
-            "relative flex flex-col items-center p-4 h-auto min-w-24",
+            "relative h-12 w-12 rounded-full",
             currentScale === type && "ring-2 ring-offset-2 ring-primary"
           )}
           onClick={() => onScaleChange(type)}
+          aria-label={aria}
+          title={aria}
         >
           <Badge 
             variant="secondary" 
@@ -36,8 +40,7 @@ export const ScaleSwitcher = ({ currentScale, onScaleChange, className }: ScaleS
             {notes}
           </Badge>
           
-          <span className="font-semibold text-sm">{label}</span>
-          <span className="text-xs text-muted-foreground mt-1">{description}</span>
+          <Icon className="h-6 w-6" />
         </Button>
       ))}
     </div>
