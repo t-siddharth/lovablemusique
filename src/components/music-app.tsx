@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NoteButton } from './ui/note-button';
 import { ScaleSwitcher } from './scale-switcher';
+import { ChromatiKeydTitle } from './chromati-keyd-title';
 import { SCALES, transposeScale, type ChromaticNote, type ScaleType } from '@/lib/music';
 import { useTone } from '@/hooks/useTone';
 import { cn } from '@/lib/utils';
@@ -26,7 +27,7 @@ export const MusicApp = () => {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-foreground mb-2">Music Pad</h1>
+        <ChromatiKeydTitle />
         <p className="text-muted-foreground">Choose your scale and play!</p>
       </div>
 

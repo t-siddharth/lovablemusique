@@ -8,6 +8,12 @@ export default {
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
 	],
+	safelist: [
+		// Text colors for chromatic notes
+		'text-red-500', 'text-orange-500', 'text-yellow-500', 'text-lime-500',
+		'text-green-500', 'text-teal-500', 'text-cyan-500', 'text-blue-500',
+		'text-indigo-500', 'text-violet-500', 'text-fuchsia-500', 'text-pink-500'
+	],
 	prefix: "",
 	theme: {
 		container: {
