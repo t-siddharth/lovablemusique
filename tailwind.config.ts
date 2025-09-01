@@ -61,7 +61,26 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				piano: {
+					'white-key': 'hsl(var(--piano-white-key))',
+					'white-key-pressed': 'hsl(var(--piano-white-key-pressed))',
+					'black-key': 'hsl(var(--piano-black-key))',
+					'black-key-pressed': 'hsl(var(--piano-black-key-pressed))',
+					shadow: 'hsl(var(--piano-shadow))',
+					background: 'hsl(var(--piano-background))',
+					panel: 'hsl(var(--piano-panel))'
 				}
+			},
+			backgroundImage: {
+				'gradient-white-key': 'var(--gradient-white-key)',
+				'gradient-black-key': 'var(--gradient-black-key)',
+				'gradient-panel': 'var(--gradient-panel)'
+			},
+			boxShadow: {
+				'key': 'var(--shadow-key)',
+				'key-pressed': 'var(--shadow-key-pressed)',
+				'panel': 'var(--shadow-panel)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
