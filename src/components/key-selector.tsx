@@ -1,7 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { CHROMATIC_NOTES, getNoteColor, type ChromaticNote } from "@/lib/music"
+import { CHROMATIC_NOTES, getNoteColorParts, type ChromaticNote } from "@/lib/music"
 
 interface KeySelectorProps {
   currentKey: ChromaticNote;
@@ -18,7 +18,7 @@ export const KeySelector = ({ currentKey, onKeyChange, className }: KeySelectorP
         <SelectTrigger className="w-32">
           <SelectValue>
             <div className="flex items-center space-x-2">
-              <div className={cn("w-4 h-4 rounded-full", getNoteColor(currentKey).split(' ')[0])} />
+              <div className={cn("w-4 h-4 rounded-full", getNoteColorParts(currentKey).bg)} />
               <span>{currentKey}</span>
             </div>
           </SelectValue>
@@ -28,7 +28,7 @@ export const KeySelector = ({ currentKey, onKeyChange, className }: KeySelectorP
           {CHROMATIC_NOTES.map((note) => (
             <SelectItem key={note} value={note} className="flex items-center">
               <div className="flex items-center space-x-3 w-full">
-                <div className={cn("w-4 h-4 rounded-full flex-shrink-0", getNoteColor(note).split(' ')[0])} />
+                <div className={cn("w-4 h-4 rounded-full flex-shrink-0", getNoteColorParts(note).bg)} />
                 <span className="font-medium">{note}</span>
                 {note === 'C' && <Badge variant="outline" className="ml-auto">Default</Badge>}
               </div>

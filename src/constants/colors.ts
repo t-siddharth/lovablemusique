@@ -1,5 +1,31 @@
 import type { ChromaticNote } from '@/types/music';
 
+/**
+ * Color mapping for chromatic notes using Tailwind CSS utility classes.
+ * 
+ * Each note is mapped to a unique color following the chromatic circle.
+ * Format: 'background hover:background text-color'
+ * 
+ * Color assignments:
+ * - C: Red (root/tonic)
+ * - C#/Db: Orange 
+ * - D: Yellow
+ * - D#/Eb: Lime
+ * - E: Green
+ * - F: Teal
+ * - F#/Gb: Cyan
+ * - G: Blue (perfect fifth from C)
+ * - G#/Ab: Indigo
+ * - A: Violet (natural sixth)
+ * - A#/Bb: Fuchsia
+ * - B: Pink (leading tone)
+ * 
+ * @example
+ * ```tsx
+ * import { CHROMATIC_COLORS } from '@/constants/colors';
+ * const cColor = CHROMATIC_COLORS['C']; // 'bg-red-500 hover:bg-red-600 text-white'
+ * ```
+ */
 export const CHROMATIC_COLORS = {
   'C': 'bg-red-500 hover:bg-red-600 text-white',
   'C#': 'bg-orange-500 hover:bg-orange-600 text-white', 
