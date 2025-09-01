@@ -22,30 +22,70 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
   // Calculate segment width for active notes
   const segmentWidth = activeCount > 0 ? 100 / activeCount : 100;
 
-  // Calculate dot positions - dots appear where their segments would be
-  const getInactiveNotePosition = (note: ChromaticNote) => {
-    // Find where this note would be inserted in the sorted active notes
-    const insertIndex = sortedActiveNotes.findIndex(activeNote => 
-      CHROMATIC_NOTES.indexOf(activeNote) > CHROMATIC_NOTES.indexOf(note)
-    );
-    const finalIndex = insertIndex === -1 ? sortedActiveNotes.length : insertIndex;
+  // Group inactive notes by their insertion gap and calculate positions
+  const inactiveNotes = CHROMATIC_NOTES.filter(note => !isActive(note));
+  
+  const getInactiveNotePositions = () => {
+    if (activeCount === 0) {
+      // Special case: no active notes, distribute dots evenly
+      return inactiveNotes.map((note, index) => ({
+        note,
+        left: (index / (inactiveNotes.length - 1)) * 100
+      }));
+    }
+
+    // Group inactive notes by their insertion gap
+    const notesByGap = new Map<number, ChromaticNote[]>();
     
-    // Position at the center of where this segment would be
-    const segmentCenter = (finalIndex / activeCount) * 100 + (segmentWidth / 2);
-    return segmentCenter;
+    inactiveNotes.forEach(note => {
+      const insertIndex = sortedActiveNotes.findIndex(activeNote => 
+        CHROMATIC_NOTES.indexOf(activeNote) > CHROMATIC_NOTES.indexOf(note)
+      );
+      const gapIndex = insertIndex === -1 ? sortedActiveNotes.length : insertIndex;
+      
+      if (!notesByGap.has(gapIndex)) {
+        notesByGap.set(gapIndex, []);
+      }
+      notesByGap.get(gapIndex)!.push(note);
+    });
+
+    // Calculate positions for each gap
+    const positions: { note: ChromaticNote; left: number }[] = [];
+    
+    notesByGap.forEach((notesInGap, gapIndex) => {
+      // Position at the gap boundary (left edge of the segment)
+      const gapPosition = (gapIndex / activeCount) * 100;
+      
+      // If multiple notes in this gap, spread them slightly around the gap
+      if (notesInGap.length === 1) {
+        positions.push({ note: notesInGap[0], left: gapPosition });
+      } else {
+        // Bunch them up with small offsets (±2% max spread)
+        const maxSpread = Math.min(2, segmentWidth * 0.3);
+        const step = maxSpread * 2 / (notesInGap.length - 1);
+        
+        notesInGap.forEach((note, index) => {
+          const offset = -maxSpread + (step * index);
+          positions.push({ 
+            note, 
+            left: Math.max(0, Math.min(100, gapPosition + offset))
+          });
+        });
+      }
+    });
+
+    return positions;
   };
+
+  const inactivePositions = getInactiveNotePositions();
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-1">
       {/* Compact dot overlay positioned above gaps */}
       <div className="relative h-4">
-        {CHROMATIC_NOTES.map((note) => {
-          const active = isActive(note);
-          if (active) return null;
-          
+        {inactivePositions.map(({ note, left }) => {
           const noteColor = getNoteColor(note);
           const bgColorClass = noteColor.split(' ')[0];
-          const leftPosition = activeCount > 0 ? getInactiveNotePosition(note) : 50;
           
           return (
             <div
@@ -56,7 +96,7 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
                 bgColorClass
               )}
               style={{
-                left: `${leftPosition}%`,
+                left: `${left}%`,
                 width: '8px',
                 height: '8px',
                 top: '50%',
