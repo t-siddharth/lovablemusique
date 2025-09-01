@@ -1,13 +1,9 @@
 import { useState } from 'react';
 import { NoteButton } from './ui/note-button';
 import { ScaleSwitcher } from './scale-switcher';
-import { KeySelector } from './key-selector';
 import { SCALES, transposeScale, type ChromaticNote, type ScaleType } from '@/lib/music';
 import { useTone } from '@/hooks/useTone';
 import { cn } from '@/lib/utils';
-import { Button } from './ui/button';
-import { Palette } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 export const MusicApp = () => {
   const [currentScale, setCurrentScale] = useState<ScaleType>('pentatonic');
@@ -28,18 +24,10 @@ export const MusicApp = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
-      {/* Header with Colors Guide Link */}
-      <div className="w-full max-w-4xl flex justify-between items-center mb-8">
-        <div className="text-center flex-1">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Music Pad</h1>
-          <p className="text-muted-foreground">Choose your scale and key, then play!</p>
-        </div>
-        <Link to="/colors-guide">
-          <Button variant="outline" size="sm">
-            <Palette className="w-4 h-4 mr-2" />
-            Colors Guide
-          </Button>
-        </Link>
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-foreground mb-2">Music Pad</h1>
+        <p className="text-muted-foreground">Choose your scale and play!</p>
       </div>
 
       {/* Controls */}
@@ -47,10 +35,6 @@ export const MusicApp = () => {
         <ScaleSwitcher 
           currentScale={currentScale} 
           onScaleChange={setCurrentScale} 
-        />
-        <KeySelector 
-          currentKey={currentKey} 
-          onKeyChange={setCurrentKey} 
         />
       </div>
 
