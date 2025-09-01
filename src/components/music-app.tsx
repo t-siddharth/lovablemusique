@@ -5,60 +5,37 @@ import { ChromatiKeydTitle } from './chromati-keyd-title';
 import { SCALES, transposeScale, type ChromaticNote, type ScaleType } from '@/lib/music';
 import { useTone } from '@/hooks/useTone';
 import { cn } from '@/lib/utils';
-
 export const MusicApp = () => {
   const [currentScale, setCurrentScale] = useState<ScaleType>('pentatonic');
   const [currentKey, setCurrentKey] = useState<ChromaticNote>('C');
   const [octave] = useState(4);
-  
-  const { playNote, stopNote, isInitialized } = useTone();
-
+  const {
+    playNote,
+    stopNote,
+    isInitialized
+  } = useTone();
   const currentNotes = transposeScale(SCALES[currentScale], currentKey);
-
   const handlePlayNote = (noteString: string, frequency: number) => {
     playNote(noteString);
   };
-
   const handleReleaseNote = (noteString: string) => {
     stopNote(noteString);
   };
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
+  return <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
       {/* Header */}
       <div className="text-center mb-8">
         <ChromatiKeydTitle />
-        <p className="text-muted-foreground">Choose your scale and play!</p>
+        
       </div>
 
       {/* Controls */}
       <div className="flex flex-wrap gap-8 items-start justify-center mb-8">
-        <ScaleSwitcher 
-          currentScale={currentScale} 
-          onScaleChange={setCurrentScale} 
-        />
+        <ScaleSwitcher currentScale={currentScale} onScaleChange={setCurrentScale} />
       </div>
 
       {/* Note Grid */}
-      <div className={cn(
-        "grid gap-4 max-w-4xl w-full justify-center",
-        currentNotes.length <= 3 && "grid-cols-3",
-        currentNotes.length === 5 && "grid-cols-3 md:grid-cols-5",
-        currentNotes.length === 7 && "grid-cols-3 md:grid-cols-4 lg:grid-cols-7",
-        currentNotes.length === 12 && "grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
-      )}>
-        {currentNotes.map((note, index) => (
-          <NoteButton
-            key={`${note}-${index}`}
-            note={note}
-            octave={octave}
-            onPlay={handlePlayNote}
-            onRelease={() => handleReleaseNote(`${note}${octave}`)}
-            size="xl"
-            disabled={!isInitialized}
-          />
-        ))}
+      <div className={cn("grid gap-4 max-w-4xl w-full justify-center", currentNotes.length <= 3 && "grid-cols-3", currentNotes.length === 5 && "grid-cols-3 md:grid-cols-5", currentNotes.length === 7 && "grid-cols-3 md:grid-cols-4 lg:grid-cols-7", currentNotes.length === 12 && "grid-cols-3 md:grid-cols-4 lg:grid-cols-6")}>
+        {currentNotes.map((note, index) => <NoteButton key={`${note}-${index}`} note={note} octave={octave} onPlay={handlePlayNote} onRelease={() => handleReleaseNote(`${note}${octave}`)} size="xl" disabled={!isInitialized} />)}
       </div>
-    </div>
-  );
+    </div>;
 };
