@@ -1,7 +1,7 @@
-import ScalePad from "@/components/ScalePad";
+import { MusicApp } from "@/components/music-app";
 
 const Index = () => {
-  return <ScalePad />;
+  return <MusicApp />;
 };
 
 export default Index;
