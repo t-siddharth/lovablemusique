@@ -172,17 +172,20 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
           {/* Sharp/flat keys row (top) */}
           <div className="relative h-14 -mb-2 z-10">
             {activeSharpFlats.map((note) => {
-              // Map sharp/flat notes to their proper gap positions between naturals
-              const sharpPositions: Record<string, number> = {
-                'C#': 0.5, // Between C-D
-                'D#': 1.5, // Between D-E  
-                'F#': 3.5, // Between F-G
-                'G#': 4.5, // Between G-A
-                'A#': 5.5  // Between A-B
+              // Dynamic mapping based on actual natural key order
+              const leftOf: Partial<Record<ChromaticNote, ChromaticNote>> = {
+                'C#': 'D',
+                'D#': 'E',
+                'F#': 'G', 
+                'G#': 'A',
+                'A#': 'B'
               };
               
-              const gapPosition = sharpPositions[note] || 0;
-              const leftPosition = (gapPosition / naturalNotes.length) * 100;
+              const rightNatural = leftOf[note as keyof typeof leftOf];
+              const naturalIndex = activeNaturals.indexOf(rightNatural);
+              const leftPosition = naturalIndex >= 0 
+                ? ((naturalIndex + 1) % 7) / 7 * 100
+                : 0;
               
               return (
                 <div
