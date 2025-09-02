@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PianoGrid } from './piano-grid';
 import { ScaleSwitcher } from './scale-switcher';
 import { ChromatiKeydTitle } from './chromati-keyd-title';
@@ -11,9 +11,28 @@ export const MusicApp = () => {
   const {
     playNote,
     stopNote,
+    stopAllNotes,
     isInitialized
   } = useTone();
   const currentNotes = transposeScale(SCALES[currentScale], currentKey);
+
+  // Global failsafe to prevent stuck notes on app focus loss
+  useEffect(() => {
+    const handleBlur = () => stopAllNotes();
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        stopAllNotes();
+      }
+    };
+
+    window.addEventListener('blur', handleBlur);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('blur', handleBlur);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [stopAllNotes]);
   const handlePlayNote = (noteString: string, frequency: number) => {
     playNote(noteString);
   };

@@ -44,17 +44,16 @@ export const NoteButton = ({
 }: NoteButtonProps) => {
   const frequency = getFrequency(note, octave);
   
-  const handlePress = async () => {
+  const handlePointerDown = async (e: React.PointerEvent) => {
     if (!disabled) {
-      // Proactively unlock audio context on first interaction
-      if (Tone.context.state !== 'running') {
-        await Tone.start();
-      }
+      e.preventDefault();
+      e.currentTarget.setPointerCapture(e.pointerId);
       onPlay(`${note}${octave}`, frequency);
     }
   };
 
-  const handleReleaseEvent = () => {
+  const handlePointerUp = (e: React.PointerEvent) => {
+    e.preventDefault();
     if (onRelease) {
       onRelease();
     }
@@ -77,11 +76,9 @@ export const NoteButton = ({
         getNoteColor(note),
         className
       )}
-      onTouchStart={handlePress}
-      onTouchEnd={handleReleaseEvent}
-      onMouseDown={handlePress}
-      onMouseUp={handleReleaseEvent}
-      onMouseLeave={handleReleaseEvent}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
       disabled={disabled}
       aria-label={`Play note ${note}${showLabel ? '' : ` ${octave}`}`}
     >

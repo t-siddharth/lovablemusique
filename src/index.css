@@ -96,4 +96,19 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Mobile optimizations for touch handling */
+  @media (hover: none) and (pointer: coarse) {
+    /* Prevent touch callouts and selection on mobile */
+    * {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    
+    /* Prevent double-tap zoom on buttons */
+    button {
+      touch-action: manipulation;
+    }
+  }
 }
