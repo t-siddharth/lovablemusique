@@ -10,22 +10,25 @@ export const useTone = () => {
   useEffect(() => {
     const initializeTone = async () => {
       try {
+        // Minimize audio scheduling latency
+        Tone.getContext().lookAhead = 0;
+        
         // Create audio chain: PolySynth -> Reverb -> Volume -> Destination
         synthRef.current = new Tone.PolySynth(Tone.Synth, {
           oscillator: {
             type: "triangle"
           },
           envelope: {
-            attack: 0.01,
-            decay: 0.2,
+            attack: 0.001, // Much faster attack for immediate response
+            decay: 0.15,
             sustain: 0.3,
-            release: 0.8
+            release: 0.4 // Shorter release for snappier feel
           }
         });
 
         reverbRef.current = new Tone.Reverb({
-          decay: 1.5,
-          wet: 0.2
+          decay: 1.2,
+          wet: 0.1 // Reduced reverb for cleaner attack
         });
 
         volumeRef.current = new Tone.Volume(-10); // Start at reasonable level
@@ -72,7 +75,7 @@ export const useTone = () => {
     const adjustedOctave = baseOctave + octaveShift;
     const adjustedNote = `${baseNote}${adjustedOctave}`;
 
-    synthRef.current.triggerAttack(adjustedNote);
+    synthRef.current.triggerAttack(adjustedNote, Tone.now());
   }, [isInitialized, startAudio]);
 
   const stopNote = useCallback((note: string, octaveShift: number = 0) => {
@@ -84,7 +87,7 @@ export const useTone = () => {
     const adjustedOctave = baseOctave + octaveShift;
     const adjustedNote = `${baseNote}${adjustedOctave}`;
 
-    synthRef.current.triggerRelease(adjustedNote);
+    synthRef.current.triggerRelease(adjustedNote, Tone.now());
   }, [isInitialized]);
 
   const setVolume = useCallback((volume: number) => {

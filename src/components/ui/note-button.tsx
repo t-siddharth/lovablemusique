@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { getNoteColor, type ChromaticNote } from "@/lib/music"
+import * as Tone from 'tone'
 
 interface NoteButtonProps {
   note: ChromaticNote;
@@ -43,8 +44,12 @@ export const NoteButton = ({
 }: NoteButtonProps) => {
   const frequency = getFrequency(note, octave);
   
-  const handlePress = () => {
+  const handlePress = async () => {
     if (!disabled) {
+      // Proactively unlock audio context on first interaction
+      if (Tone.context.state !== 'running') {
+        await Tone.start();
+      }
       onPlay(`${note}${octave}`, frequency);
     }
   };
