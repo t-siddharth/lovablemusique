@@ -166,59 +166,64 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
         })}
       </div>
 
-      {/* Keys layout - chromatic gets 2-row, others get single row */}
-      {isChromatic ? (
-        <div className="space-y-0">
-          {/* Sharp/flat keys row (top) */}
-          <div className="relative h-14 -mb-2 z-10">
-            {activeSharpFlats.map((note) => {
-              // Map sharp/flat notes to their proper gap positions between naturals
-              const sharpPositions: Record<string, number> = {
-                'C#': 0.5, // Between C-D
-                'D#': 1.5, // Between D-E  
-                'F#': 3.5, // Between F-G
-                'G#': 4.5, // Between G-A
-                'A#': 5.5  // Between A-B
-              };
-              
-              const gapPosition = sharpPositions[note] || 0;
-              const leftPosition = (gapPosition / naturalNotes.length) * 100;
-              
-              return (
-                <div
-                  key={`sharp-${note}`}
-                  className={cn(
-                    "absolute transition-all duration-300 ease-in-out origin-bottom",
-                    isChromatic ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
-                  )}
-                  style={{
-                    left: `${leftPosition}%`,
-                    width: `${100 / (naturalNotes.length * 1.4)}%`,
-                    height: '100%',
-                    transform: 'translateX(-50%)'
-                  }}
-                >
-                  <div className="p-0.5 h-full">
-                    <NoteButton
-                      note={note}
-                      octave={octave}
-                      onPlay={onPlay}
-                      onRelease={() => onRelease(`${note}${octave}`)}
-                      disabled={!isInitialized}
-                      isActive={true}
-                      variant="sharp"
-                      className="w-full h-full text-sm font-bold"
-                    />
-                  </div>
+      {/* Keys layout */}
+      <div className="space-y-0">
+        {/* Sharp/flat keys row (always rendered for animation) */}
+        <div className="relative h-14 -mb-1 z-10">
+          {/* All sharp/flat notes for proper positioning */}
+          {['C#', 'D#', 'F#', 'G#', 'A#'].map((note) => {
+            const isActiveSharp = isChromatic && activeSharpFlats.includes(note as ChromaticNote);
+            
+            // Map sharp/flat notes to their proper gap positions between naturals
+            const sharpPositions: Record<string, number> = {
+              'C#': 1, // Between C-D (gap 1)
+              'D#': 2, // Between D-E (gap 2)
+              'F#': 4, // Between F-G (gap 4)
+              'G#': 5, // Between G-A (gap 5)
+              'A#': 6  // Between A-B (gap 6)
+            };
+            
+            const gapIndex = sharpPositions[note] || 1;
+            // Position at center of gap between natural keys
+            const leftPosition = ((gapIndex - 0.5) / 7) * 100;
+            
+            return (
+              <div
+                key={`sharp-${note}`}
+                className={cn(
+                  "absolute transition-all duration-300 ease-in-out origin-bottom",
+                  isActiveSharp ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
+                )}
+                style={{
+                  left: `${leftPosition}%`,
+                  width: `${100 / (7 * 1.4)}%`,
+                  height: '100%',
+                  transform: 'translateX(-50%)'
+                }}
+              >
+                <div className="p-0.5 h-full">
+                  <NoteButton
+                    note={note as ChromaticNote}
+                    octave={octave}
+                    onPlay={onPlay}
+                    onRelease={() => onRelease(`${note}${octave}`)}
+                    disabled={!isInitialized}
+                    isActive={isActiveSharp}
+                    variant="sharp"
+                    className="w-full h-full text-sm font-bold"
+                  />
                 </div>
-              );
-            })}
-          </div>
-          
-          {/* Natural keys row (bottom) */}
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Main keys row */}
+        {isChromatic ? (
+          /* Natural keys row for chromatic mode */
           <div className="relative h-24">
             {activeNaturals.map((note, index) => {
-              const leftPosition = (index / naturalNotes.length) * 100;
+              const leftPosition = (index / 7) * 100;
               
               return (
                 <div
@@ -226,7 +231,7 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
                   className="absolute transition-all duration-300 ease-in-out"
                   style={{
                     left: `${leftPosition}%`,
-                    width: `${100 / naturalNotes.length}%`,
+                    width: `${100 / 7}%`,
                     height: '100%'
                   }}
                 >
@@ -246,8 +251,7 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
               );
             })}
           </div>
-        </div>
-      ) : (
+        ) : (
         /* Single row layout for non-chromatic views */
         <div className="relative h-32">
           {sortedActiveNotes.map((note, index) => {
@@ -278,7 +282,8 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
             );
           })}
         </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
