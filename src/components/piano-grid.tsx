@@ -170,7 +170,7 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
       {isChromatic ? (
         <div className="space-y-0">
           {/* Sharp/flat keys row (top) */}
-          <div className="relative h-14 -mb-2 -mt-2 z-10">
+          <div className="relative h-14 -mb-2 z-10">
             {activeSharpFlats.map((note) => {
               // Dynamic mapping based on actual natural key order
               const leftOf: Partial<Record<ChromaticNote, ChromaticNote>> = {
@@ -198,7 +198,7 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
                     left: `${leftPosition}%`,
                     width: `${100 / (naturalNotes.length * 1.4)}%`,
                     height: '100%',
-                    transform: 'translateX(-50%)'
+                    transform: 'translateX(-50%) translateY(-6px)'
                   }}
                 >
                   <div className="p-0.5 h-full">
