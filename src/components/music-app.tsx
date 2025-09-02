@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { PianoGrid } from './piano-grid';
 import { ScaleSwitcher } from './scale-switcher';
 import { ChromatiKeydTitle } from './chromati-keyd-title';
+import { AboutDialogButton } from './about-dialog';
 import { SCALES, transposeScale, type ChromaticNote, type ScaleType } from '@/lib/music';
 import { useTone } from '@/hooks/useTone';
 export const MusicApp = () => {
@@ -39,7 +40,12 @@ export const MusicApp = () => {
   const handleReleaseNote = (noteString: string) => {
     stopNote(noteString);
   };
-  return <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
+  return <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8 relative">
+      {/* About Button - Top Right */}
+      <div className="absolute top-4 right-4">
+        <AboutDialogButton />
+      </div>
+
       {/* Header */}
       <div className="text-center mb-8">
         <ChromatiKeydTitle />
