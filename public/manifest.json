@@ -1,0 +1,39 @@
+{
+  "name": "ChromatiKeyD - Digital Piano",
+  "short_name": "ChromatiKeyD",
+  "description": "Interactive digital piano keyboard with realistic sound. Play music with your computer keyboard or mouse clicks.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#6366f1",
+  "orientation": "any",
+  "categories": ["music", "entertainment", "education"],
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Play Piano",
+      "short_name": "Piano",
+      "description": "Start playing the digital piano",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
