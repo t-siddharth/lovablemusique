@@ -182,9 +182,9 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
               };
               
               const rightNatural = leftOf[note as keyof typeof leftOf];
-              const naturalIndex = activeNaturals.indexOf(rightNatural);
+              const naturalIndex = naturalNotes.indexOf(rightNatural);
               const leftPosition = naturalIndex >= 0 
-                ? ((naturalIndex + 1) % 7) / 7 * 100
+                ? (naturalIndex / naturalNotes.length) * 100
                 : 0;
               
               return (
