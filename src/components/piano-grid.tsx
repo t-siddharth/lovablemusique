@@ -168,29 +168,37 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
 
       {/* Keys layout - chromatic gets 2-row, others get single row */}
       {isChromatic ? (
-        <div className="space-y-1">
+        <div className="space-y-0">
           {/* Sharp/flat keys row (top) */}
-          <div className="relative h-16">
+          <div className="relative h-14 -mb-2 z-10">
             {activeSharpFlats.map((note) => {
-              // Position sharp/flat keys above gaps between naturals
-              const naturalIndex = naturalNotes.findIndex(nat => 
-                CHROMATIC_NOTES.indexOf(nat) > CHROMATIC_NOTES.indexOf(note)
-              );
-              const gapIndex = naturalIndex === -1 ? naturalNotes.length - 1 : naturalIndex - 1;
-              const leftPosition = ((gapIndex + 0.5) / naturalNotes.length) * 100;
+              // Map sharp/flat notes to their proper gap positions between naturals
+              const sharpPositions: Record<string, number> = {
+                'C#': 0.5, // Between C-D
+                'D#': 1.5, // Between D-E  
+                'F#': 3.5, // Between F-G
+                'G#': 4.5, // Between G-A
+                'A#': 5.5  // Between A-B
+              };
+              
+              const gapPosition = sharpPositions[note] || 0;
+              const leftPosition = (gapPosition / naturalNotes.length) * 100;
               
               return (
                 <div
                   key={`sharp-${note}`}
-                  className="absolute transition-all duration-300 ease-in-out"
+                  className={cn(
+                    "absolute transition-all duration-300 ease-in-out origin-bottom",
+                    isChromatic ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
+                  )}
                   style={{
                     left: `${leftPosition}%`,
-                    width: `${100 / (naturalNotes.length * 1.5)}%`,
+                    width: `${100 / (naturalNotes.length * 1.4)}%`,
                     height: '100%',
                     transform: 'translateX(-50%)'
                   }}
                 >
-                  <div className="p-1 h-full">
+                  <div className="p-0.5 h-full">
                     <NoteButton
                       note={note}
                       octave={octave}
