@@ -72,6 +72,7 @@ export const NoteButton = ({
         "active:scale-95 active:shadow-inner",
         "focus:ring-4 focus:ring-offset-2",
         "disabled:opacity-50 disabled:cursor-not-allowed",
+        "select-none [-webkit-user-select:none] [-webkit-touch-callout:none] [-webkit-tap-highlight-color:transparent] [-webkit-user-drag:none]",
         variant === 'natural' ? "rounded-lg" : "rounded-t-lg rounded-b-sm",
         getNoteColor(note),
         className
