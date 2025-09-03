@@ -59,12 +59,20 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
           CHROMATIC_NOTES.indexOf(activeNote) > CHROMATIC_NOTES.indexOf(note)
         );
       } else {
-        // For non-chromatic mode, find position relative to displayed order
-        // Find where this note would be inserted based on chromatic position
-        const notePosition = CHROMATIC_NOTES.indexOf(note);
+        // For non-chromatic mode, use rotated chromatic circle anchored at root
+        const rootNote = sortedActiveNotes[0];
+        const rootIndex = CHROMATIC_NOTES.indexOf(rootNote);
+        
+        // Create rotated chromatic circle starting from root
+        const rotatedChromatic = [
+          ...CHROMATIC_NOTES.slice(rootIndex),
+          ...CHROMATIC_NOTES.slice(0, rootIndex)
+        ];
+        
+        const notePositionInRotated = rotatedChromatic.indexOf(note);
         insertIndex = sortedActiveNotes.findIndex(activeNote => {
-          const activePosition = CHROMATIC_NOTES.indexOf(activeNote);
-          return activePosition > notePosition;
+          const activePositionInRotated = rotatedChromatic.indexOf(activeNote);
+          return activePositionInRotated > notePositionInRotated;
         });
       }
       
