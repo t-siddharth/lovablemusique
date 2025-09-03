@@ -50,7 +50,7 @@ export const MusicApp = () => {
   };
   return <div className="min-h-[100svh] bg-background flex flex-col items-center justify-between p-8 relative">
       {/* Key Selector and Octave Row Selector - Top Left */}
-      <div className="absolute top-4 left-4 flex flex-col gap-3">
+      <div className="absolute top-4 left-4 flex gap-4 items-start">
         <KeySelector currentKey={currentKey} onKeyChange={handleKeyChange} />
         <OctaveRowSelector visibleOctaves={visibleOctaves} onChange={setVisibleOctaves} />
       </div>
