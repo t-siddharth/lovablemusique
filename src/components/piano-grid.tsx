@@ -14,10 +14,14 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
   const isActive = (note: ChromaticNote) => activeNotes.includes(note);
   const activeCount = activeNotes.length;
   
-  // Sort active notes by chromatic order for consistent positioning
-  const sortedActiveNotes = [...activeNotes].sort((a, b) => 
-    CHROMATIC_NOTES.indexOf(a) - CHROMATIC_NOTES.indexOf(b)
-  );
+  // Check if we're in chromatic mode (all 12 notes active)
+  const isChromatic = activeCount === 12;
+  
+  // For non-chromatic scales, display notes in root-first order
+  // For chromatic scale, maintain chromatic order
+  const sortedActiveNotes = isChromatic 
+    ? [...activeNotes].sort((a, b) => CHROMATIC_NOTES.indexOf(a) - CHROMATIC_NOTES.indexOf(b))
+    : activeNotes; // Keep original order which starts with root note
   
   // Calculate segment width for active notes
   const segmentWidth = activeCount > 0 ? 100 / activeCount : 100;
@@ -30,8 +34,6 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
   const inactiveNaturals = inactiveNotes.filter(note => !isSharpFlat(note));
   const inactiveSharpFlats = inactiveNotes.filter(note => isSharpFlat(note));
   
-  // Check if we're in chromatic mode (all 12 notes active)
-  const isChromatic = activeCount === 12;
   
   // Natural notes for piano layout reference
   const naturalNotes: ChromaticNote[] = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -50,9 +52,22 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
     const notesByGap = new Map<number, ChromaticNote[]>();
     
     notes.forEach(note => {
-      const insertIndex = sortedActiveNotes.findIndex(activeNote => 
-        CHROMATIC_NOTES.indexOf(activeNote) > CHROMATIC_NOTES.indexOf(note)
-      );
+      let insertIndex;
+      if (isChromatic) {
+        // For chromatic mode, use chromatic ordering
+        insertIndex = sortedActiveNotes.findIndex(activeNote => 
+          CHROMATIC_NOTES.indexOf(activeNote) > CHROMATIC_NOTES.indexOf(note)
+        );
+      } else {
+        // For non-chromatic mode, find position relative to displayed order
+        // Find where this note would be inserted based on chromatic position
+        const notePosition = CHROMATIC_NOTES.indexOf(note);
+        insertIndex = sortedActiveNotes.findIndex(activeNote => {
+          const activePosition = CHROMATIC_NOTES.indexOf(activeNote);
+          return activePosition > notePosition;
+        });
+      }
+      
       const gapIndex = insertIndex === -1 ? sortedActiveNotes.length : insertIndex;
       
       if (!notesByGap.has(gapIndex)) {
