@@ -20,7 +20,7 @@ const ColorsGuide = () => {
     
     switch (octave) {
       case 3:
-        return `bg-${baseColor}-400 hover:bg-${baseColor}-400 text-black`;
+        return `bg-${baseColor}-300 hover:bg-${baseColor}-400 text-black`;
       case 4:
         return getNoteColor(note); // Use current mapping
       case 5:
@@ -188,7 +188,7 @@ const ColorsGuide = () => {
               <div>
                 <h4 className="font-semibold mb-3 flex items-center gap-2">
                   <Badge variant="outline">Octave 3</Badge>
-                  Lighter intensity (400) with black text
+                  Lighter intensity (300) with black text
                 </h4>
                 <div className="grid grid-cols-6 md:grid-cols-12 gap-2">
                   {CHROMATIC_NOTES.map((note) => (
