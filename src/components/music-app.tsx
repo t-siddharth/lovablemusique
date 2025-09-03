@@ -46,7 +46,7 @@ export const MusicApp = () => {
     stopAllNotes(); // Prevent stuck notes when changing key
     setCurrentKey(key);
   };
-  return <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8 relative">
+  return <div className="min-h-[100svh] bg-background flex flex-col items-center justify-between p-8 relative">
       {/* Key Selector - Top Left */}
       <div className="absolute top-4 left-4">
         <KeySelector currentKey={currentKey} onKeyChange={handleKeyChange} />
@@ -57,24 +57,26 @@ export const MusicApp = () => {
         <AboutDialogButton />
       </div>
 
-      {/* Header */}
-      <div className="text-center mb-8">
-        <ChromatiKeydTitle />
+      {/* Header and Controls - Top Section */}
+      <div className="flex flex-col items-center justify-center space-y-6">
+        <div className="text-center">
+          <ChromatiKeydTitle />
+        </div>
         
+        <div className="flex flex-wrap gap-8 items-start justify-center">
+          <ScaleSwitcher currentScale={currentScale} onScaleChange={setCurrentScale} />
+        </div>
       </div>
 
-      {/* Controls */}
-      <div className="flex flex-wrap gap-8 items-start justify-center mb-8">
-        <ScaleSwitcher currentScale={currentScale} onScaleChange={setCurrentScale} />
+      {/* Piano Grid - Bottom Section */}
+      <div className="w-full pb-[calc(env(safe-area-inset-bottom,0px)+16px)]">
+        <PianoGrid
+          activeNotes={currentNotes}
+          octave={octave}
+          onPlay={handlePlayNote}
+          onRelease={handleReleaseNote}
+          isInitialized={isInitialized}
+        />
       </div>
-
-      {/* Piano Grid */}
-      <PianoGrid
-        activeNotes={currentNotes}
-        octave={octave}
-        onPlay={handlePlayNote}
-        onRelease={handleReleaseNote}
-        isInitialized={isInitialized}
-      />
     </div>;
 };

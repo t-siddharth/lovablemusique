@@ -242,7 +242,7 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
           </div>
           
           {/* Natural keys row (bottom) */}
-          <div className="relative h-24">
+          <div className="relative h-32 md:h-40 lg:h-48">
             {activeNaturals.map((note, index) => {
               const leftPosition = (index / naturalNotes.length) * 100;
               
@@ -275,7 +275,7 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
         </div>
       ) : (
         /* Single row layout for non-chromatic views */
-        <div className="relative h-32">
+        <div className="relative h-40 md:h-48 lg:h-56">
           {sortedActiveNotes.map((note, index) => {
             const leftPosition = (index / activeCount) * 100;
             
