@@ -20,11 +20,11 @@ const ColorsGuide = () => {
     
     switch (octave) {
       case 3:
-        return `bg-${baseColor}-300 hover:bg-${baseColor}-400 text-black`;
+        return `bg-${baseColor}-700 hover:bg-${baseColor}-800 text-white`;
       case 4:
         return getNoteColor(note); // Use current mapping
       case 5:
-        return `bg-${baseColor}-700 hover:bg-${baseColor}-800 text-white`;
+        return `bg-${baseColor}-300 hover:bg-${baseColor}-400 text-black`;
       default:
         return getNoteColor(note);
     }
@@ -137,7 +137,7 @@ const ColorsGuide = () => {
               Octave-aware Color Variants
             </CardTitle>
             <CardDescription>
-              Different octaves use varying color intensities: Octave 3 (lighter), Octave 4 (base), Octave 5 (darker).
+              Different octaves use varying color intensities: Octave 5 (lighter, higher pitch), Octave 4 (base), Octave 3 (darker, lower pitch).
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -146,7 +146,7 @@ const ColorsGuide = () => {
               <div>
                 <h4 className="font-semibold mb-3 flex items-center gap-2">
                   <Badge variant="outline">Octave 5</Badge>
-                  Darker intensity (700/800) with white text
+                  Lighter intensity (300/400) - Higher Pitch
                 </h4>
                 <div className="grid grid-cols-6 md:grid-cols-12 gap-2">
                   {CHROMATIC_NOTES.map((note) => (
@@ -188,7 +188,7 @@ const ColorsGuide = () => {
               <div>
                 <h4 className="font-semibold mb-3 flex items-center gap-2">
                   <Badge variant="outline">Octave 3</Badge>
-                  Lighter intensity (300) with black text
+                  Darker intensity (700/800) - Lower Pitch
                 </h4>
                 <div className="grid grid-cols-6 md:grid-cols-12 gap-2">
                   {CHROMATIC_NOTES.map((note) => (
@@ -252,7 +252,7 @@ const ColorsGuide = () => {
               <div>
                 <h4 className="font-semibold mb-3 flex items-center gap-2">
                   <Badge variant="outline">Octave 5</Badge>
-                  Darker Variants
+                  Lighter Variants (Higher Pitch)
                 </h4>
                 <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
                   {CHROMATIC_NOTES.slice(0, 8).map((note) => (
@@ -271,7 +271,7 @@ const ColorsGuide = () => {
               <div>
                 <h4 className="font-semibold mb-3 flex items-center gap-2">
                   <Badge variant="outline">Octave 3</Badge>
-                  Lighter Variants
+                  Darker Variants (Lower Pitch)
                 </h4>
                 <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
                   {CHROMATIC_NOTES.slice(0, 8).map((note) => (

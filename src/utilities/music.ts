@@ -48,9 +48,9 @@ export const getNoteColorParts = (note: ChromaticNote): { bg: string; hover: str
 /**
  * Returns octave-specific color classes for a given chromatic note.
  * Different octaves use different color intensities:
- * - Octave 3: lighter intensity (300/400) with black text
+ * - Octave 3: darker intensity (700/800) with white text (lower pitch)
  * - Octave 4: standard intensity (500/600) - current mapping
- * - Octave 5: darker intensity (700/800) with white text
+ * - Octave 5: lighter intensity (300/400) with black text (higher pitch)
  * 
  * @param note - The chromatic note to get colors for
  * @param octave - The octave number (3, 4, or 5)
@@ -58,9 +58,9 @@ export const getNoteColorParts = (note: ChromaticNote): { bg: string; hover: str
  * 
  * @example
  * ```tsx
- * const c3Color = getNoteColorForOctave('C', 3); // 'bg-red-300 hover:bg-red-400 text-black'
+ * const c3Color = getNoteColorForOctave('C', 3); // 'bg-red-700 hover:bg-red-800 text-white'
  * const c4Color = getNoteColorForOctave('C', 4); // 'bg-red-500 hover:bg-red-600 text-white'
- * const c5Color = getNoteColorForOctave('C', 5); // 'bg-red-700 hover:bg-red-800 text-white'
+ * const c5Color = getNoteColorForOctave('C', 5); // 'bg-red-300 hover:bg-red-400 text-black'
  * ```
  */
 export const getNoteColorForOctave = (note: ChromaticNote, octave: number): string => {
@@ -71,11 +71,11 @@ export const getNoteColorForOctave = (note: ChromaticNote, octave: number): stri
   
   switch (octave) {
     case 3:
-      return `bg-${baseColor}-300 hover:bg-${baseColor}-400 text-black`;
+      return `bg-${baseColor}-700 hover:bg-${baseColor}-800 text-white`;
     case 4:
       return CHROMATIC_COLORS[note]; // Use current mapping
     case 5:
-      return `bg-${baseColor}-700 hover:bg-${baseColor}-800 text-white`;
+      return `bg-${baseColor}-300 hover:bg-${baseColor}-400 text-black`;
     default:
       return CHROMATIC_COLORS[note]; // Fallback to default
   }
