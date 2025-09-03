@@ -149,11 +149,20 @@ export const PianoGrid = ({ activeNotes, octave, octaveCount = 1, onPlay, onRele
 
     const rowHeight = getRowHeight();
 
+    // Calculate octaves from top to bottom: [highest → lowest]
+    const rowOctaves = (() => {
+      switch (octaveCount) {
+        case 1: return [octave];
+        case 2: return [octave + 1, octave]; // C5 at top, C4 at bottom
+        case 3: return [octave + 1, octave, octave - 1]; // C5, C4, C3
+        default: return [octave];
+      }
+    })();
+
     return (
       <div className="w-full max-w-6xl mx-auto">
-        <div className="flex flex-col justify-end gap-2">
-          {Array.from({ length: octaveCount }, (_, i) => {
-            const rowOctave = octave + i;
+        <div className="flex flex-col gap-2">
+          {rowOctaves.map((rowOctave) => {
             
             return (
               <div key={rowOctave} className="w-full">
