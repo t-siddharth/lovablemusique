@@ -3,14 +3,31 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { NoteButton } from "@/components/ui/note-button";
-import { CHROMATIC_NOTES, CHROMATIC_COLORS, getNoteColor, type ChromaticNote } from "@/lib/music";
+import { CHROMATIC_NOTES, CHROMATIC_COLORS, getNoteColor, getNoteColorParts, type ChromaticNote } from "@/lib/music";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, Palette, Music, Code } from "lucide-react";
+import { ArrowLeft, Palette, Music, Code, Layers } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const ColorsGuide = () => {
   const playDemoNote = (note: string, frequency: number) => {
     console.log(`Demo: Playing ${note} at ${frequency}Hz`);
+  };
+
+  // Helper function for octave-specific color classes
+  const getOctaveVariantClasses = (note: ChromaticNote, octave: 3 | 4 | 5): string => {
+    const { bg: baseBg } = getNoteColorParts(note);
+    const baseColor = baseBg.replace('bg-', '').replace('-500', '');
+    
+    switch (octave) {
+      case 3:
+        return `bg-${baseColor}-400 hover:bg-${baseColor}-400 text-black`;
+      case 4:
+        return getNoteColor(note); // Use current mapping
+      case 5:
+        return `bg-${baseColor}-700 hover:bg-${baseColor}-800 text-white`;
+      default:
+        return getNoteColor(note);
+    }
   };
 
   return (
@@ -112,36 +129,163 @@ const ColorsGuide = () => {
           </CardContent>
         </Card>
 
+        {/* Octave-aware Color Variants */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Layers className="w-5 h-5" />
+              Octave-aware Color Variants
+            </CardTitle>
+            <CardDescription>
+              Different octaves use varying color intensities: Octave 3 (lighter), Octave 4 (base), Octave 5 (darker).
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Color intensity grid */}
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <Badge variant="outline">Octave 5</Badge>
+                  Darker intensity (700/800) with white text
+                </h4>
+                <div className="grid grid-cols-6 md:grid-cols-12 gap-2">
+                  {CHROMATIC_NOTES.map((note) => (
+                    <div key={`5-${note}`} className="text-center">
+                      <div
+                        className={cn(
+                          "w-12 h-12 rounded-lg flex items-center justify-center text-xs font-bold shadow-sm",
+                          getOctaveVariantClasses(note, 5)
+                        )}
+                      >
+                        {note}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <Badge variant="outline">Octave 4</Badge>
+                  Base intensity (500/600) - current mapping
+                </h4>
+                <div className="grid grid-cols-6 md:grid-cols-12 gap-2">
+                  {CHROMATIC_NOTES.map((note) => (
+                    <div key={`4-${note}`} className="text-center">
+                      <div
+                        className={cn(
+                          "w-12 h-12 rounded-lg flex items-center justify-center text-xs font-bold shadow-sm",
+                          getOctaveVariantClasses(note, 4)
+                        )}
+                      >
+                        {note}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <Badge variant="outline">Octave 3</Badge>
+                  Lighter intensity (400) with black text
+                </h4>
+                <div className="grid grid-cols-6 md:grid-cols-12 gap-2">
+                  {CHROMATIC_NOTES.map((note) => (
+                    <div key={`3-${note}`} className="text-center">
+                      <div
+                        className={cn(
+                          "w-12 h-12 rounded-lg flex items-center justify-center text-xs font-bold shadow-sm",
+                          getOctaveVariantClasses(note, 3)
+                        )}
+                      >
+                        {note}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Interactive Demo */}
         <Card>
           <CardHeader>
             <CardTitle>Interactive Demo</CardTitle>
             <CardDescription>
-              Click the note buttons below to see the color system in action with our NoteButton component.
+              Click the note buttons below to see both base colors and octave variants in action.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-              {CHROMATIC_NOTES.slice(0, 6).map((note) => (
-                <NoteButton
-                  key={note}
-                  note={note}
-                  onPlay={playDemoNote}
-                  size="md"
-                  className="mx-auto"
-                />
-              ))}
+          <CardContent className="space-y-6">
+            {/* Base demo */}
+            <div>
+              <h4 className="font-semibold mb-3">Base Color System (Octave 4)</h4>
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+                {CHROMATIC_NOTES.slice(0, 6).map((note) => (
+                  <NoteButton
+                    key={note}
+                    note={note}
+                    octave={4}
+                    onPlay={playDemoNote}
+                    size="md"
+                    className="mx-auto"
+                  />
+                ))}
+              </div>
+              <div className="mt-4 grid grid-cols-3 md:grid-cols-6 gap-3">
+                {CHROMATIC_NOTES.slice(6).map((note) => (
+                  <NoteButton
+                    key={note}
+                    note={note}
+                    octave={4}
+                    onPlay={playDemoNote}
+                    size="md"
+                    className="mx-auto"
+                  />
+                ))}
+              </div>
             </div>
-            <div className="mt-4 grid grid-cols-3 md:grid-cols-6 gap-3">
-              {CHROMATIC_NOTES.slice(6).map((note) => (
-                <NoteButton
-                  key={note}
-                  note={note}
-                  onPlay={playDemoNote}
-                  size="md"
-                  className="mx-auto"
-                />
-              ))}
+
+            {/* Octave variants demo */}
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <Badge variant="outline">Octave 5</Badge>
+                  Darker Variants
+                </h4>
+                <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+                  {CHROMATIC_NOTES.slice(0, 8).map((note) => (
+                    <NoteButton
+                      key={`demo-5-${note}`}
+                      note={note}
+                      octave={5}
+                      onPlay={playDemoNote}
+                      size="sm"
+                      className={cn("mx-auto", getOctaveVariantClasses(note, 5))}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <Badge variant="outline">Octave 3</Badge>
+                  Lighter Variants
+                </h4>
+                <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+                  {CHROMATIC_NOTES.slice(0, 8).map((note) => (
+                    <NoteButton
+                      key={`demo-3-${note}`}
+                      note={note}
+                      octave={3}
+                      onPlay={playDemoNote}
+                      size="sm"
+                      className={cn("mx-auto", getOctaveVariantClasses(note, 3))}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
