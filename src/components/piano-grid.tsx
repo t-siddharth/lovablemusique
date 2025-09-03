@@ -5,13 +5,13 @@ import { cn } from '@/lib/utils';
 interface PianoGridProps {
   activeNotes: ChromaticNote[];
   octave: number;
-  octaveCount?: number;
+  visibleOctaves?: number[];
   onPlay: (note: string, frequency: number) => void;
   onRelease: (noteString: string) => void;
   isInitialized: boolean;
 }
 
-export const PianoGrid = ({ activeNotes, octave, octaveCount = 1, onPlay, onRelease, isInitialized }: PianoGridProps) => {
+export const PianoGrid = ({ activeNotes, octave, visibleOctaves = [4], onPlay, onRelease, isInitialized }: PianoGridProps) => {
   const isActive = (note: ChromaticNote) => activeNotes.includes(note);
   const activeCount = activeNotes.length;
   
@@ -138,9 +138,9 @@ export const PianoGrid = ({ activeNotes, octave, octaveCount = 1, onPlay, onRele
   const activeSharpFlats = activeNotes.filter(note => isSharpFlat(note));
 
   // Multi-octave rendering
-  if (octaveCount > 1) {
+  if (visibleOctaves.length > 1) {
     const getRowHeight = () => {
-      switch (octaveCount) {
+      switch (visibleOctaves.length) {
         case 2: return 'h-32 md:h-40 lg:h-48';
         case 3: return 'h-28 md:h-32 lg:h-40';
         default: return 'h-40 md:h-48 lg:h-56';
@@ -149,15 +149,8 @@ export const PianoGrid = ({ activeNotes, octave, octaveCount = 1, onPlay, onRele
 
     const rowHeight = getRowHeight();
 
-    // Calculate octaves from top to bottom: [highest → lowest]
-    const rowOctaves = (() => {
-      switch (octaveCount) {
-        case 1: return [octave];
-        case 2: return [octave + 1, octave]; // C5 at top, C4 at bottom
-        case 3: return [octave + 1, octave, octave - 1]; // C5, C4, C3
-        default: return [octave];
-      }
-    })();
+    // Use visible octaves in descending order (highest to lowest)
+    const rowOctaves = [...visibleOctaves].sort((a, b) => b - a);
 
     return (
       <div className="w-full max-w-6xl mx-auto">

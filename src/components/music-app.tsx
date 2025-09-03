@@ -4,14 +4,14 @@ import { ScaleSwitcher } from './scale-switcher';
 import { KeySelector } from './key-selector';
 import { ChromatiKeydTitle } from './chromati-keyd-title';
 import { AboutDialogButton } from './about-dialog';
-import { OctaveCountSwitcher } from './octave-count-switcher';
+import { OctaveRowSelector } from './octave-row-selector';
 import { SCALES, transposeScale, type ChromaticNote, type ScaleType } from '@/lib/music';
 import { useTone } from '@/hooks/useTone';
 export const MusicApp = () => {
   const [currentScale, setCurrentScale] = useState<ScaleType>('pentatonic');
   const [currentKey, setCurrentKey] = useState<ChromaticNote>('C');
   const [octave] = useState(4);
-  const [octaveCount, setOctaveCount] = useState(1);
+  const [visibleOctaves, setVisibleOctaves] = useState<number[]>([4]); // Start with only C4 visible
   const {
     playNote,
     stopNote,
@@ -67,7 +67,7 @@ export const MusicApp = () => {
         
         <div className="flex flex-wrap gap-8 items-start justify-center">
           <ScaleSwitcher currentScale={currentScale} onScaleChange={setCurrentScale} />
-          <OctaveCountSwitcher value={octaveCount} onChange={setOctaveCount} />
+          <OctaveRowSelector visibleOctaves={visibleOctaves} onChange={setVisibleOctaves} />
         </div>
       </div>
 
@@ -76,7 +76,7 @@ export const MusicApp = () => {
         <PianoGrid
           activeNotes={currentNotes}
           octave={octave}
-          octaveCount={octaveCount}
+          visibleOctaves={visibleOctaves}
           onPlay={handlePlayNote}
           onRelease={handleReleaseNote}
           isInitialized={isInitialized}
