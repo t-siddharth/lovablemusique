@@ -46,6 +46,42 @@ export const getNoteColorParts = (note: ChromaticNote): { bg: string; hover: str
 };
 
 /**
+ * Returns octave-specific color classes for a given chromatic note.
+ * Different octaves use different color intensities:
+ * - Octave 3: lighter intensity (300/400) with black text
+ * - Octave 4: standard intensity (500/600) - current mapping
+ * - Octave 5: darker intensity (700/800) with white text
+ * 
+ * @param note - The chromatic note to get colors for
+ * @param octave - The octave number (3, 4, or 5)
+ * @returns String containing background, hover, and text color classes
+ * 
+ * @example
+ * ```tsx
+ * const c3Color = getNoteColorForOctave('C', 3); // 'bg-red-300 hover:bg-red-400 text-black'
+ * const c4Color = getNoteColorForOctave('C', 4); // 'bg-red-500 hover:bg-red-600 text-white'
+ * const c5Color = getNoteColorForOctave('C', 5); // 'bg-red-700 hover:bg-red-800 text-white'
+ * ```
+ */
+export const getNoteColorForOctave = (note: ChromaticNote, octave: number): string => {
+  // Get the base color name from the default mapping
+  const defaultColor = CHROMATIC_COLORS[note];
+  const baseColorMatch = defaultColor.match(/bg-(\w+)-500/);
+  const baseColor = baseColorMatch ? baseColorMatch[1] : 'gray';
+  
+  switch (octave) {
+    case 3:
+      return `bg-${baseColor}-300 hover:bg-${baseColor}-400 text-black`;
+    case 4:
+      return CHROMATIC_COLORS[note]; // Use current mapping
+    case 5:
+      return `bg-${baseColor}-700 hover:bg-${baseColor}-800 text-white`;
+    default:
+      return CHROMATIC_COLORS[note]; // Fallback to default
+  }
+};
+
+/**
  * Transposes a scale to a new root note.
  * 
  * @param baseScale - Array of chromatic notes representing the scale pattern

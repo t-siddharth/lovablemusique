@@ -1,4 +1,4 @@
-import { CHROMATIC_NOTES, getNoteColor, type ChromaticNote } from '@/lib/music';
+import { CHROMATIC_NOTES, getNoteColor, getNoteColorForOctave, type ChromaticNote } from '@/lib/music';
 import { NoteButton } from './ui/note-button';
 import { cn } from '@/lib/utils';
 
@@ -304,7 +304,7 @@ export const PianoGrid = ({ activeNotes, octave, octaveCount = 1, onPlay, onRele
       <div className="relative h-6">
         {/* Sharp/flat dots (higher tier) */}
         {sharpFlatPositions.map(({ note, left }) => {
-          const noteColor = getNoteColor(note);
+          const noteColor = getNoteColorForOctave(note, octave);
           const bgColorClass = noteColor.split(' ')[0];
           
           return (
@@ -328,7 +328,7 @@ export const PianoGrid = ({ activeNotes, octave, octaveCount = 1, onPlay, onRele
         
         {/* Natural dots (lower tier) */}
         {naturalPositions.map(({ note, left }) => {
-          const noteColor = getNoteColor(note);
+          const noteColor = getNoteColorForOctave(note, octave);
           const bgColorClass = noteColor.split(' ')[0];
           
           return (

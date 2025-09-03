@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { getNoteColor, type ChromaticNote } from "@/lib/music"
+import { getNoteColor, getNoteColorForOctave, type ChromaticNote } from "@/lib/music"
 import * as Tone from 'tone'
 
 interface NoteButtonProps {
@@ -75,7 +75,7 @@ export const NoteButton = ({
         "select-none [-webkit-user-select:none] [-webkit-touch-callout:none] [-webkit-tap-highlight-color:transparent] [-webkit-user-drag:none]",
         "touch-manipulation",
         variant === 'natural' ? "rounded-lg" : "rounded-t-lg rounded-b-sm",
-        getNoteColor(note),
+        getNoteColorForOctave(note, octave),
         className
       )}
       onPointerDown={handlePointerDown}
