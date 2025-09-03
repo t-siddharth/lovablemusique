@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { PianoGrid } from './piano-grid';
 import { ScaleSwitcher } from './scale-switcher';
+import { KeySelector } from './key-selector';
 import { ChromatiKeydTitle } from './chromati-keyd-title';
 import { AboutDialogButton } from './about-dialog';
 import { SCALES, transposeScale, type ChromaticNote, type ScaleType } from '@/lib/music';
@@ -40,6 +41,11 @@ export const MusicApp = () => {
   const handleReleaseNote = (noteString: string) => {
     stopNote(noteString);
   };
+
+  const handleKeyChange = (key: ChromaticNote) => {
+    stopAllNotes(); // Prevent stuck notes when changing key
+    setCurrentKey(key);
+  };
   return <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8 relative">
       {/* About Button - Top Right */}
       <div className="absolute top-4 right-4">
@@ -55,6 +61,7 @@ export const MusicApp = () => {
       {/* Controls */}
       <div className="flex flex-wrap gap-8 items-start justify-center mb-8">
         <ScaleSwitcher currentScale={currentScale} onScaleChange={setCurrentScale} />
+        <KeySelector currentKey={currentKey} onKeyChange={handleKeyChange} />
       </div>
 
       {/* Piano Grid */}
