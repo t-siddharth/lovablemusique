@@ -22,30 +22,6 @@ export const OctaveRowSelector = ({ visibleOctaves, onChange }: OctaveRowSelecto
   return (
     <div className="flex flex-col items-center space-y-2">
       <div className="flex gap-1">
-        {/* C5 Button */}
-        <button
-          onClick={() => handleToggle(5)}
-          className={`
-            px-3 py-2 rounded-md text-sm font-medium transition-colors
-            ${isActive(5) 
-              ? 'bg-primary text-primary-foreground' 
-              : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-            }
-          `}
-          aria-label="Toggle C5 octave"
-        >
-          C5
-        </button>
-
-        {/* C4 Button (always active, more prominent) */}
-        <button
-          className="px-4 py-2 rounded-md text-sm font-bold bg-primary text-primary-foreground shadow-md scale-105"
-          disabled
-          aria-label="C4 octave (always visible)"
-        >
-          C4
-        </button>
-
         {/* C3 Button */}
         <button
           onClick={() => handleToggle(3)}
@@ -59,6 +35,30 @@ export const OctaveRowSelector = ({ visibleOctaves, onChange }: OctaveRowSelecto
           aria-label="Toggle C3 octave"
         >
           C3
+        </button>
+
+        {/* C4 Button (always active, more prominent) */}
+        <button
+          className="px-4 py-2 rounded-md text-sm font-bold bg-primary text-primary-foreground shadow-md scale-105"
+          disabled
+          aria-label="C4 octave (always visible)"
+        >
+          C4
+        </button>
+
+        {/* C5 Button */}
+        <button
+          onClick={() => handleToggle(5)}
+          className={`
+            px-3 py-2 rounded-md text-sm font-medium transition-colors
+            ${isActive(5) 
+              ? 'bg-primary text-primary-foreground' 
+              : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+            }
+          `}
+          aria-label="Toggle C5 octave"
+        >
+          C5
         </button>
       </div>
     </div>
