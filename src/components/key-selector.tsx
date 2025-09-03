@@ -11,9 +11,7 @@ interface KeySelectorProps {
 
 export const KeySelector = ({ currentKey, onKeyChange, className }: KeySelectorProps) => {
   return (
-    <div className={cn("flex flex-col space-y-2", className)}>
-      <label className="text-sm font-medium">Choose Key:</label>
-      
+    <div className={cn("", className)}>
       <Select value={currentKey} onValueChange={(value) => onKeyChange(value as ChromaticNote)}>
         <SelectTrigger className="w-32">
           <SelectValue>
@@ -36,10 +34,6 @@ export const KeySelector = ({ currentKey, onKeyChange, className }: KeySelectorP
           ))}
         </SelectContent>
       </Select>
-      
-      <p className="text-xs text-muted-foreground">
-        All notes will shift to this key
-      </p>
     </div>
   );
 };

@@ -47,6 +47,11 @@ export const MusicApp = () => {
     setCurrentKey(key);
   };
   return <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8 relative">
+      {/* Key Selector - Top Left */}
+      <div className="absolute top-4 left-4">
+        <KeySelector currentKey={currentKey} onKeyChange={handleKeyChange} />
+      </div>
+
       {/* About Button - Top Right */}
       <div className="absolute top-4 right-4">
         <AboutDialogButton />
@@ -61,7 +66,6 @@ export const MusicApp = () => {
       {/* Controls */}
       <div className="flex flex-wrap gap-8 items-start justify-center mb-8">
         <ScaleSwitcher currentScale={currentScale} onScaleChange={setCurrentScale} />
-        <KeySelector currentKey={currentKey} onKeyChange={handleKeyChange} />
       </div>
 
       {/* Piano Grid */}
