@@ -49,9 +49,10 @@ export const MusicApp = () => {
     setCurrentKey(key);
   };
   return <div className="min-h-[100svh] bg-background flex flex-col items-center justify-between p-8 relative">
-      {/* Key Selector - Top Left */}
-      <div className="absolute top-4 left-4">
+      {/* Key Selector and Octave Row Selector - Top Left */}
+      <div className="absolute top-4 left-4 flex flex-col gap-3">
         <KeySelector currentKey={currentKey} onKeyChange={handleKeyChange} />
+        <OctaveRowSelector visibleOctaves={visibleOctaves} onChange={setVisibleOctaves} />
       </div>
 
       {/* About Button - Top Right */}
@@ -67,7 +68,6 @@ export const MusicApp = () => {
         
         <div className="flex flex-wrap gap-8 items-start justify-center">
           <ScaleSwitcher currentScale={currentScale} onScaleChange={setCurrentScale} />
-          <OctaveRowSelector visibleOctaves={visibleOctaves} onChange={setVisibleOctaves} />
         </div>
       </div>
 
