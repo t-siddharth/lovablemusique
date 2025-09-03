@@ -111,4 +111,27 @@ All colors MUST be HSL.
       touch-action: manipulation;
     }
   }
+
+  /* PWA-specific no-zoom styling for iOS */
+  .pwa-no-zoom {
+    /* Reinforce zoom prevention */
+    -webkit-user-select: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    
+    /* Additional touch handling */
+    touch-action: manipulation !important;
+    
+    /* Prevent any potential text selection */
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }
+
+  .pwa-no-zoom * {
+    -webkit-user-select: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    user-select: none !important;
+  }
 }
