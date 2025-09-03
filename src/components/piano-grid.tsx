@@ -5,12 +5,13 @@ import { cn } from '@/lib/utils';
 interface PianoGridProps {
   activeNotes: ChromaticNote[];
   octave: number;
+  octaveCount?: number;
   onPlay: (note: string, frequency: number) => void;
   onRelease: (noteString: string) => void;
   isInitialized: boolean;
 }
 
-export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialized }: PianoGridProps) => {
+export const PianoGrid = ({ activeNotes, octave, octaveCount = 1, onPlay, onRelease, isInitialized }: PianoGridProps) => {
   const isActive = (note: ChromaticNote) => activeNotes.includes(note);
   const activeCount = activeNotes.length;
   
@@ -136,6 +137,158 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
   const activeNaturals = activeNotes.filter(note => !isSharpFlat(note));
   const activeSharpFlats = activeNotes.filter(note => isSharpFlat(note));
 
+  // Multi-octave rendering
+  if (octaveCount > 1) {
+    const getRowHeight = () => {
+      switch (octaveCount) {
+        case 2: return 'h-32 md:h-40 lg:h-48';
+        case 3: return 'h-28 md:h-32 lg:h-40';
+        default: return 'h-40 md:h-48 lg:h-56';
+      }
+    };
+
+    const rowHeight = getRowHeight();
+
+    return (
+      <div className="w-full max-w-6xl mx-auto">
+        <div className="flex flex-col justify-end gap-2">
+          {Array.from({ length: octaveCount }, (_, i) => {
+            const rowOctave = octave + i;
+            
+            return (
+              <div key={rowOctave} className="w-full">
+                {isChromatic ? (
+                  /* Chromatic layout for this row */
+                  <div className="space-y-0">
+                    {/* Sharp/flat keys row (top) */}
+                    <div className="relative h-14 -mb-2 z-10">
+                      {activeSharpFlats.map((note) => {
+                        // Dynamic mapping based on actual natural key order
+                        const leftOf: Partial<Record<ChromaticNote, ChromaticNote>> = {
+                          'C#': 'D',
+                          'D#': 'E',
+                          'F#': 'G', 
+                          'G#': 'A',
+                          'A#': 'B'
+                        };
+                        
+                        const rightNatural = leftOf[note as keyof typeof leftOf];
+                        const naturalIndex = naturalNotes.indexOf(rightNatural);
+                        const leftPosition = naturalIndex >= 0 
+                          ? (naturalIndex / naturalNotes.length) * 100
+                          : 0;
+                        
+                        return (
+                          <div
+                            key={`sharp-${note}-${rowOctave}`}
+                            className="absolute transition-all duration-300 ease-in-out origin-bottom"
+                            style={{
+                              left: `${leftPosition}%`,
+                              width: `${100 / (naturalNotes.length * 1.4)}%`,
+                              height: '100%',
+                              transform: 'translateX(-50%) translateY(-6px)'
+                            }}
+                          >
+                            <div className="p-0.5 h-full">
+                              <NoteButton
+                                note={note}
+                                octave={rowOctave}
+                                onPlay={onPlay}
+                                onRelease={() => onRelease(`${note}${rowOctave}`)}
+                                disabled={!isInitialized}
+                                isActive={true}
+                                variant="sharp"
+                                className="w-full h-full text-sm font-bold"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    {/* Natural keys row (bottom) */}
+                    <div className={`relative ${rowHeight}`}>
+                      {activeNaturals.map((note, index) => {
+                        const leftPosition = (index / naturalNotes.length) * 100;
+                        
+                        return (
+                          <div
+                            key={`natural-${note}-${rowOctave}`}
+                            className="absolute transition-all duration-300 ease-in-out"
+                            style={{
+                              left: `${leftPosition}%`,
+                              width: `${100 / naturalNotes.length}%`,
+                              height: '100%'
+                            }}
+                          >
+                            <div className="p-1 h-full">
+                              <NoteButton
+                                note={note}
+                                octave={rowOctave}
+                                onPlay={onPlay}
+                                onRelease={() => onRelease(`${note}${rowOctave}`)}
+                                disabled={!isInitialized}
+                                isActive={true}
+                                variant="natural"
+                                className="w-full h-full text-lg font-bold"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  /* Single row layout for non-chromatic views */
+                  <div className={`relative ${rowHeight}`}>
+                    {sortedActiveNotes.map((note, index) => {
+                      const leftPosition = (index / activeCount) * 100;
+                      
+                      // Calculate octave for this note
+                      const rootNote = sortedActiveNotes[0];
+                      const rootIndex = CHROMATIC_NOTES.indexOf(rootNote);
+                      const noteIndex = CHROMATIC_NOTES.indexOf(note);
+                      
+                      // If note comes before root in chromatic order but after in display order,
+                      // it should be played at octave+1
+                      const shouldRaiseOctave = noteIndex < rootIndex;
+                      const noteOctave = shouldRaiseOctave ? rowOctave + 1 : rowOctave;
+                      
+                      return (
+                        <div
+                          key={`active-${note}-${index}-${rowOctave}`}
+                          className="absolute transition-all duration-300 ease-in-out"
+                          style={{
+                            left: `${leftPosition}%`,
+                            width: `${segmentWidth}%`,
+                            height: '100%'
+                          }}
+                        >
+                          <div className="p-1 h-full">
+                            <NoteButton
+                              note={note}
+                              octave={noteOctave}
+                              onPlay={onPlay}
+                              onRelease={() => onRelease(`${note}${noteOctave}`)}
+                              disabled={!isInitialized}
+                              isActive={true}
+                              className="w-full h-full text-lg font-bold"
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // Single octave rendering (original logic)
   return (
     <div className="w-full max-w-6xl mx-auto space-y-1">
       {/* Two-tier dot overlay */}
