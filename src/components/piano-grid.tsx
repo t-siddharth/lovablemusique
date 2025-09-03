@@ -271,6 +271,16 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
           {sortedActiveNotes.map((note, index) => {
             const leftPosition = (index / activeCount) * 100;
             
+            // Calculate correct octave for root-first ordering
+            const rootNote = sortedActiveNotes[0];
+            const rootIndex = CHROMATIC_NOTES.indexOf(rootNote);
+            const noteIndex = CHROMATIC_NOTES.indexOf(note);
+            
+            // If note comes before root in chromatic order but after in display order,
+            // it should be played at octave+1
+            const shouldRaiseOctave = noteIndex < rootIndex;
+            const noteOctave = shouldRaiseOctave ? octave + 1 : octave;
+            
             return (
               <div
                 key={`active-${note}`}
@@ -284,9 +294,9 @@ export const PianoGrid = ({ activeNotes, octave, onPlay, onRelease, isInitialize
                 <div className="p-1 h-full">
                   <NoteButton
                     note={note}
-                    octave={octave}
+                    octave={noteOctave}
                     onPlay={onPlay}
-                    onRelease={() => onRelease(`${note}${octave}`)}
+                    onRelease={() => onRelease(`${note}${noteOctave}`)}
                     disabled={!isInitialized}
                     isActive={true}
                     className="w-full h-full text-lg font-bold"
